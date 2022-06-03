@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.vet
 
+import io.github.wimdeblauwe.hsbt.mvc.HtmxRequest
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
@@ -30,10 +31,10 @@ import org.springframework.web.bind.annotation.ResponseBody
 class VetController(val vetRepository: VetRepository) {
 
     @GetMapping("/vets.html")
-    fun showHtmlVetList(model: MutableMap<String, Any>): String {
+    fun showHtmlVetList(htmxRequest: HtmxRequest, model: MutableMap<String, Any>): String {
         val vets = Vets(vetRepository.findAll())
         model.put("vets", vets)
-        return "vets/vetList"
+        return if (htmxRequest.isHtmxRequest) "vets/vetList :: body" else "vets/vetList"
     }
 
     @GetMapping("vets.json", produces = ["application/json"])

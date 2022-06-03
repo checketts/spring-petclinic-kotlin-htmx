@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.owner
 
+import io.github.wimdeblauwe.hsbt.mvc.HtmxRequest
 import org.springframework.samples.petclinic.visit.VisitRepository
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -61,9 +62,13 @@ class OwnerController(val owners: OwnerRepository, val visits: VisitRepository) 
     }
 
     @GetMapping("/owners/find")
-    fun initFindForm(model: MutableMap<String, Any>): String {
+    fun initFindForm(htmxReq: HtmxRequest, model: MutableMap<String, Any>): String {
         model["owner"] = Owner()
-        return "owners/findOwners"
+        return if(htmxReq.isHtmxRequest) {
+            "owners/findOwners :: body"
+        } else {
+            "owners/findOwners"
+        }
     }
 
     @GetMapping("/owners")

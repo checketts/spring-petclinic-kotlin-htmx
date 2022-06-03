@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
-  th:replace="~{fragments/layout :: layout (~{::body},'vets')}">
+  th:replace="~{fragments/layout :: layout (~{::#layoutBody},'vets')}">
 
 <body>
+<div id="layoutBody" th:fragment="body">
 
   <h2>Veterinarians</h2>
 
@@ -31,5 +32,6 @@
     </tr>
   </table>
 
+</div>
 </body>
 </html>

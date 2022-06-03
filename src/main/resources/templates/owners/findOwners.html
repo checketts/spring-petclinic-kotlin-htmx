@@ -1,7 +1,8 @@
 <html xmlns:th="https://www.thymeleaf.org"
-      th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
+      th:replace="~{fragments/layout :: layout (~{::#layoutBody},'owners')}">
 
 <body>
+<div id="layoutBody" th:fragment="body">
 
 <h2>Find Owners</h2>
 
@@ -30,5 +31,6 @@
 
 </form>
 
+</div>
 </body>
 </html>

@@ -54,6 +54,9 @@ dependencies {
     implementation("org.webjars.npm:bootstrap:$boostrapVersion")
     implementation("org.webjars.npm:font-awesome:$fontAwesomeVersion")
 
+    implementation("io.github.wimdeblauwe:htmx-spring-boot-thymeleaf:0.2.0")
+    implementation("org.webjars.npm:htmx.org:1.7.0")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.junit.jupiter:junit-jupiter-api")

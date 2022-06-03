@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.system
 
+import io.github.wimdeblauwe.hsbt.mvc.HtmxRequest
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 
@@ -25,5 +26,5 @@ import org.springframework.web.bind.annotation.GetMapping
 class WelcomeController {
 
     @GetMapping("/")
-    fun welcome(): String = "welcome"
+    fun welcome(htmxReq: HtmxRequest): String = if(htmxReq.isHtmxRequest) "welcome :: body" else "welcome"
 }

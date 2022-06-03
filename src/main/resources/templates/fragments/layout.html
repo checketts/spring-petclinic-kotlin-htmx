@@ -1,5 +1,5 @@
 <!doctype html>
-<html th:fragment="layout (template, menu)">
+<html th:fragment="layout (template, menu)" xmlns:hx="http://www.w3.org/1999/xhtml">
 
 <head>
 
@@ -35,7 +35,12 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0" th:remove="all">
 
                 <li th:fragment="menuItem (link,active,title,glyph,text)" th:class="nav-item">
-                    <a th:class="${active==menu ? 'nav-link active' : 'nav-link'}" th:href="@{__${link}__}" th:title="${title}">
+                    <a th:classappend="${#httpServletRequest.getRequestURI().equals(link) ? 'nav-link active' : 'nav-link'}"
+                            hx:get="@{__${link}__}"
+                            hx-target="#layoutBody"
+                            hx-swap="outerHTML"
+                            hx-push-url="true"
+                            th:title="${title}">
                         <span th:class="'fa fa-'+${glyph}" class="fa fa-home"></span>
                         <span th:text="${text}">Template</span>
                     </a>
@@ -73,7 +78,7 @@
 <div class="container-fluid">
     <div class="container xd-container">
 
-        <th:block th:include="${template}" />
+        <div id="layoutBody" th:insert="${template}" ></div>
 
         <br />
         <br />
@@ -88,6 +93,7 @@
 </div>
 
 <script th:src="@{/webjars/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/webjars/htmx.org/1.7.0/dist/htmx.js}"></script>
 
 </body>
 
