@@ -32,6 +32,19 @@ fun welcome(htmxReq: HtmxRequest): String = if(htmxReq.isHtmxRequest) "welcome :
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+# Project Details
+
 ## Technologies used
 
 * Language: Kotlin
