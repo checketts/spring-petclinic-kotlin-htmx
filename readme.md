@@ -2,11 +2,40 @@
 [![Java CI with Gradle](https://github.com/spring-petclinic/spring-petclinic-kotlin/actions/workflows/gradle-build.yml/badge.svg)](https://github.com/spring-petclinic/spring-petclinic-kotlin/actions/workflows/gradle-build.yml)
 [![Docker pulls](https://img.shields.io/docker/pulls/springcommunity/spring-petclinic-kotlin.svg)](https://hub.docker.com/repository/docker/springcommunity/spring-petclinic-kotlin)
 
-This is a [Kotlin](https://kotlinlang.org/) version of the [spring-petclinic][] Application. 
+This is a [Kotlin](https://kotlinlang.org/) version of the [spring-petclinic][] Application that leverages HTMX to improve the user experience. 
+
+# HTMX/Thymeleaf Patterns
+
+## Gotchas
+
+### Body root element will be stripped
+
+Avoid putting an ID on the `body` element if it is to be returned as a fragment 
+(`<body id="myId">`) since HTMX only inserts the body's children to the DOM (to avoid having multiple `body`s) 
+
+## Routing
+
+
+
+## Deep linking
+
+Use `HtmxRequest` to determine if the endpoint should return a part of the template or just a fragment of the template.
+
+```kotlin
+@GetMapping("/")
+fun welcome(htmxReq: HtmxRequest): String = if(htmxReq.isHtmxRequest) "welcome :: body" else "welcome"
+```
+
+## Errors
+
+(more detail later, but an error response is ignored and inserted into the dom)
+
+
 
 ## Technologies used
 
 * Language: Kotlin
+* Client: HTMX
 * Core framework: Spring Boot 2 with Spring Framework 5 Kotlin support
 * Server: Apache Tomcat
 * Web framework: Spring MVC
