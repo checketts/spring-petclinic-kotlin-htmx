@@ -1,12 +1,115 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::#layoutBody},'owners')}">
 
   <body>
+  <div id="layoutBody" th:fragment="body">
 
     <h2>Owners</h2>
 
-    <table id="owners" class="table table-striped">
+
+<!--      <th-block th:remove="all">-->
+<!--          <th:block th:fragment="sortLink(text, sortField, page)"-->
+<!--                    th:with="sort=${page?.sort?.getOrderFor(sortField)}">-->
+<!--              <a class="sortableTableHeader"-->
+<!--                 th:if="${sort?.direction?.name() == 'ASC' || sort == null}"-->
+<!--                 hx:get="@{/admin/grandfathered/search/(size=${page.pageSize},page=${page.pageNumber},sort=${sortField}+',DESC')}"-->
+<!--                 hx-target="#searchResults"-->
+<!--                 th:text="${text}"-->
+<!--              ></a>-->
+
+<!--              <a class="sortableTableHeader"-->
+<!--                 th:if="${sort?.direction?.name() == 'DESC'}"-->
+<!--                 hx:get="@{/admin/grandfathered/search/(size=${page.pageSize},page=${page.pageNumber},sort=${sortField}+',ASC')}"-->
+<!--                 hx-target="#searchResults"-->
+<!--                 th:text="${text}"-->
+<!--              ></a>-->
+
+<!--              <i th:if="${sort?.direction?.name() == 'ASC'}" class="fa fa-sort-up"></i>-->
+<!--              <i th:if="${sort?.direction?.name() == 'DESC'}" class="fa fa-sort-down"></i>-->
+<!--              <i th:if="${sort == null}" style="color: #cccccc" class="fa fa-sort"></i>-->
+
+<!--          </th:block>-->
+<!--      </th-block>-->
+
+
+<!--      <table class="table" th:if="${rows?.size() > 0}">-->
+<!--          <thead>-->
+<!--          <tr>-->
+<!--              <th scope="col">Remove Grandfathering</th>-->
+<!--              <th scope="col" th:insert=":: sortLink('MRN', 'mrn', ${currentPage})">MRN</th>-->
+<!--              <th scope="col" th:insert=":: sortLink('CMIS ID', 'cmisId', ${currentPage})">CMIS-->
+<!--                  ID-->
+<!--              </th>-->
+<!--              <th scope="col"-->
+<!--                  th:insert=":: sortLink('Grandfathered Date', 'grandfathered', ${currentPage})">-->
+<!--                  Grandfathered Date-->
+<!--              </th>-->
+<!--              <th scope="col">Records</th>-->
+<!--          </tr>-->
+<!--          </thead>-->
+<!--          <tbody>-->
+<!--          &lt;!&ndash;/*@thymesVar id="rows" type="List<PersonAndTotal>"*/&ndash;&gt;-->
+<!--          <th:block th:each="row : ${rows}" th:with="rowId=${#ids.seq('checkSync')}">-->
+<!--              &lt;!&ndash;/*@thymesVar id="person" type="Person"*/&ndash;&gt;-->
+<!--              <tr>-->
+<!--                  <td><a hx:delete="@{/admin/grandfathered/{cmisId}(cmisId=${row.cmisId})}"-->
+<!--                         class="btn btn-danger"-->
+<!--                         hx-swap="outerHTML"-->
+<!--                         hx:target="'#'+${rowId}"-->
+<!--                  >Clear</a>-->
+<!--                  </td>-->
+<!--                  <th scope="row" th:text="${row.mrn}">mrn</th>-->
+<!--                  <td th:text="${row.cmisId}">1234</td>-->
+<!--                  <td>-->
+<!--                      <div th:text="${row.grandfatheredUntilDate?.toFuzzyDateString()}">Grandfathered</div>-->
+
+<!--                  </td>-->
+<!--                  <td>-->
+<!--                      <div class="row" th:each="record: ${detailFormatter.format(row.confidentialDetails)}">-->
+<!--                          <span th:text="${record}">2010</span>-->
+<!--                      </div>-->
+
+<!--                  </td>-->
+<!--              </tr>-->
+<!--              <tr th:classappend="${syncResult == null ? 'd-none' : ''}" th:id="${rowId}"-->
+<!--                  th:fragment="syncResult">-->
+<!--                  <td colspan="5" th:text="${syncResult}">-->
+
+<!--                  </td>-->
+<!--              </tr>-->
+<!--          </th:block>-->
+<!--          </tbody>-->
+<!--      </table>-->
+
+<!--      <div th:if="${totalPages > 1}">-->
+<!--          <div class="row col-sm-10">-->
+<!--              <div class="col-sm-2">-->
+<!--                  Total Rows: [[${totalItems}]]-->
+<!--              </div>-->
+<!--              <div class="col-sm-1">-->
+<!--     <span th:each="i: ${#numbers.sequence(1, totalPages)}">-->
+<!--      <a th:if="${currentPage != i}"-->
+<!--         th:href="@{'/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>-->
+<!--      <span th:unless="${currentPage != i}">[[${i}]]</span>-->
+<!--     </span>-->
+<!--              </div>-->
+<!--              <div class="col-sm-1">-->
+<!--                  <a th:if="${currentPage < totalPages}"-->
+<!--                     th:href="@{'/page/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>-->
+<!--                  <span th:unless="${currentPage < totalPages}">Next</span>-->
+<!--              </div>-->
+
+<!--              <div class="col-sm-1">-->
+<!--                  <a th:if="${currentPage < totalPages}"-->
+<!--                     th:href="@{'/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>-->
+<!--                  <span th:unless="${currentPage < totalPages}">Last</span>-->
+<!--              </div>-->
+<!--          </div>-->
+<!--      </div>-->
+
+
+    <table id="owners" th:fragment="owners" class="table table-striped">
         <thead>
         <tr>
             <th style="width: 150px;">Name</th>
@@ -19,7 +122,7 @@
         <tbody>
           <tr th:each="owner : ${selections}">
               <td>
-                  <a th:href="@{owners/__${owner.id}__}" th:text="${owner.firstName + ' ' + owner.lastName}"/></a>
+                  <a th:href="@{|/owners/${owner.id}|}" th:text="${owner.firstName + ' ' + owner.lastName}"/></a>
               </td>
               <td th:text="${owner.address}"/>
               <td th:text="${owner.city}"/>
@@ -28,6 +131,6 @@
           </tr>
         </tbody>
     </table>
-
+  </div>
   </body>
 </html>

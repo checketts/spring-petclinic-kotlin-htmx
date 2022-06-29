@@ -8,6 +8,10 @@ This is a [Kotlin](https://kotlinlang.org/) version of the [spring-petclinic][] 
 
 ## Gotchas
 
+### `hx:val` Requires double quoted json
+
+Use single quotes to build hx:vals so the json will be properly formed: `hx:vals='|{"rowId":"${rowId}"}|'`
+
 ### Body root element will be stripped
 
 Avoid putting an ID on the `body` element if it is to be returned as a fragment 

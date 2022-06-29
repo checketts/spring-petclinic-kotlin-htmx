@@ -16,6 +16,9 @@
 package org.springframework.samples.petclinic.owner
 
 import io.github.wimdeblauwe.hsbt.mvc.HtmxRequest
+import io.github.wimdeblauwe.hsbt.mvc.HtmxResponse
+import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.event.EventListener
 import org.springframework.samples.petclinic.visit.VisitRepository
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.InitBinder
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import javax.validation.Valid
+import kotlin.random.Random
 
 /**
  * @author Juergen Hoeller
@@ -42,6 +46,26 @@ class OwnerController(val owners: OwnerRepository, val visits: VisitRepository) 
     @InitBinder
     fun setAllowedFields(dataBinder: WebDataBinder) {
         dataBinder.setDisallowedFields("id")
+    }
+
+    @EventListener
+    fun onReady(readyEvent: ApplicationReadyEvent) {
+        repeat(150) {
+            owners.save(Owner().apply {
+                address = "Main Street #${Random.nextInt(1000)}"
+                city = "Town ${Random.nextInt(200)}"
+                telephone = "5555555555"
+                firstName = "Guy${it}"
+                lastName = when(Random.nextInt(4)) {
+                    0 -> "Smith"
+                    1 -> "Wilson"
+                    2 -> "Jones"
+                    3 -> "Washington"
+                    4 -> "Lastname"
+                    else -> "Lastestname"
+                }
+            })
+        }
     }
 
     @GetMapping("/owners/new")
@@ -72,25 +96,27 @@ class OwnerController(val owners: OwnerRepository, val visits: VisitRepository) 
     }
 
     @GetMapping("/owners")
-    fun processFindForm(owner: Owner, result: BindingResult, model: MutableMap<String, Any>): String {
+    fun processFindForm(owner: Owner, result: BindingResult, model: MutableMap<String, Any>, hxRequest: HtmxRequest): HtmxResponse {
+        val resp = HtmxResponse()
         // find owners by last name
         val results = owners.findByLastName(owner.lastName)
-        return when {
+        when {
             results.isEmpty() -> {
                 // no owners found
                 result.rejectValue("lastName", "notFound", "not found")
-                "owners/findOwners"
+                if(hxRequest.isHtmxRequest) resp.addTemplate("owners/findOwners :: body") else resp.addTemplate("owners/findOwners")
             }
             results.size == 1 -> {
                 // 1 owner found
-                "redirect:/owners/" + results.first().id
+                resp.browserRedirect("/owners/" + results.first().id)
             }
             else -> {
                 // multiple owners found
                 model["selections"] = results
-                "owners/ownersList"
+                if(hxRequest.isHtmxRequest) resp.addTemplate("owners/ownersList :: body") else resp.addTemplate("owners/ownersList")
             }
         }
+        return resp
     }
 
     @GetMapping("/owners/{ownerId}/edit")
